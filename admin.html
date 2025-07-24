@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin – Andika Habari</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Admin – Tuma Habari Mpya</h1>
+  <textarea id="habari" rows="8" cols="80" placeholder="Andika habari hapa..."></textarea><br>
+  <button id="tumaBtn">Tuma Habari</button>
+
+  <div id="message"></div>
+
+  <script>
+    document.getElementById("tumaBtn").onclick = function() {
+      const habari = document.getElementById("habari").value.trim();
+      if (!habari) {
+        alert("Tafadhali andika habari kwanza.");
+        return;
+      }
+      // Hifadhi data kibrowser (na si server) – tumia LocalStorage
+      const archived = JSON.parse(localStorage.getItem("habarizangu") || "[]");
+      archived.unshift({
+        text: habari,
+        date: new Date().toISOString()
+      });
+      localStorage.setItem("habarizangu", JSON.stringify(archived));
+      document.getElementById("message").innerText = "Habari zimehifadhiwa ndani ya browser.";
+      document.getElementById("habari").value = "";
+    };
+  </script>
+  <script>
+  const pwd = prompt("Andika password ya admin:");
+  if (pwd !== "SIRI-123") {
+    document.body.innerHTML = "Access Denied.";  // au unaweza sema: “Hauruhusiwi kufungua ukurasa huu.”
+    throw new Error("Blocked unauthorized access");
+  }
+</script>
+</body>
+</html>
