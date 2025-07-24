@@ -104,6 +104,94 @@
 	   </div>
   
   </section>
+	<title>Habari Mpya</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f4f9;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h2 {
+      color: #4B0082; /* Rangi ya zambarau */
+      text-align: center;
+    }
+
+    .news-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .news-card {
+      background: white;
+      border-left: 6px solid #6a0dad; /* Zambarau */
+      padding: 15px 20px;
+      border-radius: 10px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .news-card:hover {
+      transform: scale(1.02);
+    }
+
+    .news-date {
+      font-size: 0.9em;
+      color: #777;
+      margin-bottom: 8px;
+    }
+
+    .news-text {
+      font-size: 1em;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📰 Habari Mpya kutoka Msisimko FM</h2>
+
+  <div class="news-container" id="newsContainer"></div>
+
+  <script>
+    // Pakua habari kutoka localStorage
+    const habari = JSON.parse(localStorage.getItem("habarizangu") || "[]");
+    const container = document.getElementById("newsContainer");
+
+    if (habari.length === 0) {
+      container.innerHTML = "<p style='text-align:center;'>Hakuna habari mpya kwa sasa.</p>";
+    } else {
+      habari.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "news-card";
+        card.innerHTML = `
+          <div class="news-date">${new Date(item.date).toLocaleString()}</div>
+          <div class="news-text">${item.text}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+  </script>
+
+</body>
+</html>.
+
+<script>
+  const container = document.getElementById("news-container");
+  const arr = JSON.parse(localStorage.getItem("habarizangu") || "[]");
+  if (arr.length === 0) {
+    container.innerHTML = "<p>Hakuna habari.</p>";
+  } else {
+    container.innerHTML = arr.map(item => 
+      `<div class="news-item">
+         <small>${new Date(item.date).toLocaleString()}</small>
+         <p>${item.text}</p>
+       </div>`).join("");
+  }
+</script>
    <!--Mawasiliano-->
     <section id="Mawasiliano">
           <div id="MITANDAO YA KIJAMII" class="collapsible">
