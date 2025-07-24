@@ -104,81 +104,97 @@
 	   </div>
   
   </section>
-	<title>Habari Mpya</title>
+	
+  <title>Habari za Msisimko FM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f0f0;
       margin: 0;
       padding: 0;
     }
 
+    header {
+      background: #6a1b9a;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
     .container {
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 15px;
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
     }
 
     .habari {
-      background: #fff;
+      background: white;
       border-radius: 10px;
-      padding: 20px;
       margin-bottom: 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
     .habari h2 {
       margin-top: 0;
-      font-size: 22px;
       color: #333;
-    }
-
-    .habari p {
-      font-size: 16px;
-      color: #555;
-      line-height: 1.6;
     }
 
     .habari .tarehe {
       font-size: 13px;
-      color: #999;
+      color: #888;
       margin-bottom: 10px;
     }
 
-    .habari .picha-nyingi {
+    .habari p {
+      color: #444;
+      line-height: 1.6;
+    }
+
+    .picha-nyingi {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin-top: 10px;
     }
 
-    .habari .picha-nyingi img {
+    .picha-nyingi img {
+      flex: 1 1 45%;
       max-width: 100%;
-      height: auto;
-      border-radius: 5px;
-      flex: 1 0 48%;
+      border-radius: 8px;
       object-fit: cover;
     }
 
     @media (max-width: 600px) {
-      .habari .picha-nyingi img {
-        flex: 1 0 100%;
+      .picha-nyingi img {
+        flex: 1 1 100%;
       }
+    }
+
+    .no-news {
+      text-align: center;
+      padding: 30px;
+      color: #777;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Habari Mpya</h1>
-    <div id="newsList"></div>
+
+  <header>
+    <h1>Habari Mpya kutoka Msisimko FM</h1>
+  </header>
+
+  <div class="container" id="newsList">
+    <!-- Habari zitajazwa hapa -->
   </div>
 
   <script>
     const newsListEl = document.getElementById('newsList');
-    const newsData = JSON.parse(localStorage.getItem('newsList') || '[]');
+    const newsData = JSON.parse(localStorage.getItem('Msisimko_newsList') || '[]');
 
     if (newsData.length === 0) {
-      newsListEl.innerHTML = "<p>Hakuna habari zilizowekwa bado.</p>";
+      newsListEl.innerHTML = '<div class="no-news">Hakuna habari zilizopakiwa bado.</div>';
     } else {
       newsData.forEach(item => {
         const div = document.createElement('div');
@@ -202,51 +218,7 @@
       });
     }
   </script>
-</body>
-</html>
-</head>
-<body>
 
-  <h2>📰 Habari Mpya kutoka Msisimko FM</h2>
-
-  <div class="news-container" id="newsContainer"></div>
-
-  <script>
-    // Pakua habari kutoka localStorage
-    const habari = JSON.parse(localStorage.getItem("habarizangu") || "[]");
-    const container = document.getElementById("newsContainer");
-
-    if (habari.length === 0) {
-      container.innerHTML = "<p style='text-align:center;'>Hakuna habari mpya kwa sasa.</p>";
-    } else {
-      habari.forEach(item => {
-        const card = document.createElement("div");
-        card.className = "news-card";
-        card.innerHTML = `
-          <div class="news-date">${new Date(item.date).toLocaleString()}</div>
-          <div class="news-text">${item.text}</div>
-        `;
-        container.appendChild(card);
-      });
-    }
-  </script>
-
-</body>
-</html>.
-
-<script>
-  const container = document.getElementById("news-container");
-  const arr = JSON.parse(localStorage.getItem("habarizangu") || "[]");
-  if (arr.length === 0) {
-    container.innerHTML = "<p>Hakuna habari.</p>";
-  } else {
-    container.innerHTML = arr.map(item => 
-      `<div class="news-item">
-         <small>${new Date(item.date).toLocaleString()}</small>
-         <p>${item.text}</p>
-       </div>`).join("");
-  }
-</script>
    <!--Mawasiliano-->
     <section id="Mawasiliano">
           <div id="MITANDAO YA KIJAMII" class="collapsible">
