@@ -2,58 +2,123 @@
 <!DOCTYPE html>
 <html lang="sw">
 <head>
-  <meta charset="UTF-8">
-  <title>Admin - Tuma Habari</title>
+  <meta charset="UTF-8" />
+  <title>Admin - Tuma Habari (Login Required)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
       font-family: Arial, sans-serif;
       max-width: 700px;
-      margin: 20px auto;
+      margin: 30px auto;
       padding: 10px;
     }
-    input, textarea, button {
+
+    #loginSection, #adminSection {
+      background: #f7f7f7;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    #adminSection {
+      display: none;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    textarea,
+    input[type="file"] {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
       font-size: 16px;
+      box-sizing: border-box;
     }
+
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: #6a1b9a;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #7e31b5;
+    }
+
     #previewContainer {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
+      margin-top: 15px;
     }
+
     #previewContainer img {
       max-width: 150px;
       max-height: 150px;
-      border: 1px solid #aaa;
-      padding: 3px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
       object-fit: cover;
     }
   </style>
 </head>
 <body>
 
-  <h2>Admin Panel - Tuma Habari</h2>
+  <h2>Admin - Ingia kwanza</h2>
 
-  <form id="newsForm">
-    <input type="text" name="title" placeholder="Kichwa cha Habari" required>
-    <textarea name="content" placeholder="Maelezo ya habari..." rows="4" required></textarea>
+  <section id="loginSection">
+    <input type="password" id="passwordInput" placeholder="Weka neno siri" />
+    <button id="loginBtn">Ingia</button>
+    <p id="loginMsg" style="color:red; display:none; margin-top:10px;">Neno siri si sahihi!</p>
+  </section>
 
-    <label>Chagua Picha (Unaweza kuchagua zaidi ya moja):</label>
-    <input type="file" id="imageUpload" accept="image/*" multiple>
+  <section id="adminSection">
+    <h2>Tuma Habari</h2>
 
-    <div id="previewContainer"></div>
+    <form id="newsForm">
+      <input type="text" name="title" placeholder="Kichwa cha Habari" required />
+      <textarea name="content" placeholder="Maelezo ya habari..." rows="4" required></textarea>
 
-    <button type="submit">Tuma Habari</button>
-  </form>
+      <label>Chagua Picha (unaweza kuchagua zaidi ya moja):</label>
+      <input type="file" id="imageUpload" accept="image/*" multiple />
+
+      <div id="previewContainer"></div>
+
+      <button type="submit">Tuma Habari</button>
+    </form>
+  </section>
 
   <script>
+    const passwordCorrect = "Bizzy@123";
+
+    const loginSection = document.getElementById('loginSection');
+    const adminSection = document.getElementById('adminSection');
+    const loginBtn = document.getElementById('loginBtn');
+    const passwordInput = document.getElementById('passwordInput');
+    const loginMsg = document.getElementById('loginMsg');
+
     const form = document.getElementById('newsForm');
     const imageUpload = document.getElementById('imageUpload');
     const previewContainer = document.getElementById('previewContainer');
 
     let selectedImages = [];
 
+    // Login button event
+    loginBtn.addEventListener('click', () => {
+      const pass = passwordInput.value.trim();
+      if (pass === passwordCorrect) {
+        loginSection.style.display = 'none';
+        adminSection.style.display = 'block';
+        loginMsg.style.display = 'none';
+      } else {
+        loginMsg.style.display = 'block';
+      }
+    });
+
+    // Show image previews when user selects files
     imageUpload.addEventListener('change', () => {
       selectedImages = [];
       previewContainer.innerHTML = '';
@@ -71,6 +136,7 @@
       });
     });
 
+    // Submit form event
     form.addEventListener('submit', e => {
       e.preventDefault();
 
@@ -82,7 +148,7 @@
         return;
       }
 
-      const newsList = JSON.parse(localStorage.getItem('newsList') || '[]');
+      const newsList = JSON.parse(localStorage.getItem('Msisimko_newsList') || '[]');
       newsList.unshift({
         title,
         content,
@@ -90,9 +156,9 @@
         date: new Date().toISOString()
       });
 
-      localStorage.setItem('newsList', JSON.stringify(newsList));
+      localStorage.setItem('Msisimko_newsList', JSON.stringify(newsList));
 
-      alert("✅ Habari imehifadhiwa na picha zitaonekana!");
+      alert("✅ Habari imehifadhiwa kikamilifu!");
       form.reset();
       previewContainer.innerHTML = '';
       selectedImages = [];
