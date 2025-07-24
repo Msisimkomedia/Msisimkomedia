@@ -1,41 +1,103 @@
+<!-- admin.html -->
 <!DOCTYPE html>
 <html lang="sw">
 <head>
   <meta charset="UTF-8">
-  <title>Admin – Andika Habari</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Admin - Tuma Habari</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 20px auto;
+      padding: 10px;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    #previewContainer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    #previewContainer img {
+      max-width: 150px;
+      max-height: 150px;
+      border: 1px solid #aaa;
+      padding: 3px;
+      object-fit: cover;
+    }
+  </style>
 </head>
 <body>
-  <h1>Admin – Tuma Habari Mpya</h1>
-  <textarea id="habari" rows="8" cols="80" placeholder="Andika habari hapa..."></textarea><br>
-  <button id="tumaBtn">Tuma Habari</button>
 
-  <div id="message"></div>
+  <h2>Admin Panel - Tuma Habari</h2>
+
+  <form id="newsForm">
+    <input type="text" name="title" placeholder="Kichwa cha Habari" required>
+    <textarea name="content" placeholder="Maelezo ya habari..." rows="4" required></textarea>
+
+    <label>Chagua Picha (Unaweza kuchagua zaidi ya moja):</label>
+    <input type="file" id="imageUpload" accept="image/*" multiple>
+
+    <div id="previewContainer"></div>
+
+    <button type="submit">Tuma Habari</button>
+  </form>
 
   <script>
-    document.getElementById("tumaBtn").onclick = function() {
-      const habari = document.getElementById("habari").value.trim();
-      if (!habari) {
-        alert("Tafadhali andika habari kwanza.");
+    const form = document.getElementById('newsForm');
+    const imageUpload = document.getElementById('imageUpload');
+    const previewContainer = document.getElementById('previewContainer');
+
+    let selectedImages = [];
+
+    imageUpload.addEventListener('change', () => {
+      selectedImages = [];
+      previewContainer.innerHTML = '';
+      const files = Array.from(imageUpload.files);
+
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const img = document.createElement('img');
+          img.src = reader.result;
+          previewContainer.appendChild(img);
+          selectedImages.push(reader.result);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+
+      const title = form.title.value.trim();
+      const content = form.content.value.trim();
+
+      if (!title || !content) {
+        alert("Tafadhali jaza kichwa na maelezo ya habari.");
         return;
       }
-      // Hifadhi data kibrowser (na si server) – tumia LocalStorage
-      const archived = JSON.parse(localStorage.getItem("habarizangu") || "[]");
-      archived.unshift({
-        text: habari,
+
+      const newsList = JSON.parse(localStorage.getItem('newsList') || '[]');
+      newsList.unshift({
+        title,
+        content,
+        images: selectedImages,
         date: new Date().toISOString()
       });
-      localStorage.setItem("habarizangu", JSON.stringify(archived));
-      document.getElementById("message").innerText = "Habari zimehifadhiwa ndani ya browser.";
-      document.getElementById("habari").value = "";
-    };
+
+      localStorage.setItem('newsList', JSON.stringify(newsList));
+
+      alert("✅ Habari imehifadhiwa na picha zitaonekana!");
+      form.reset();
+      previewContainer.innerHTML = '';
+      selectedImages = [];
+    });
   </script>
-  <script>
-  const pwd = prompt("Andika password ya admin:");
-  if (pwd !== "SIRI-123") {
-    document.body.innerHTML = "Access Denied.";  // au unaweza sema: “Hauruhusiwi kufungua ukurasa huu.”
-    throw new Error("Blocked unauthorized access");
-  }
-</script>
+
 </body>
 </html>
