@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel - Msisimko Media</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+
+    label, select, input, textarea, button {
+      display: block;
+      margin-bottom: 15px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    textarea {
+      height: 100px;
+    }
+
+    .preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .preview img {
+      max-height: 100px;
+      border-radius: 8px;
+    }
+
+    .success {
+      color: green;
+    }
+
+    #adminPanel {
+      display: none;
+    }
+
+    #loginBox {
+      max-width: 400px;
+      margin: auto;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loginBox">
+    <h2>Ingia kwenye Admin Panel</h2>
+    <label for="password">Weka Nenosiri:</label>
+    <input type="password" id="password" placeholder="********">
+    <button onclick="checkPassword()">Ingia</button>
+    <p id="loginStatus" class="error"></p>
+  </div>
+
+  <div id="adminPanel">
+    <h1>Admin Panel - Weka Maudhui (na Picha)</h1>
+
+    <form id="postForm">
+      <label for="section">Chagua Nav Sehemu:</label>
+      <select id="section" required>
+        <option value="Msisimko_newsList">Habari</option>
+        <option value="FILAMU_MPYA">Filamu Mpya</option>
+        <option value="UDAKU">Udaku</option>
+        <option value="KITAIFA">Kitaifa</option>
+        <option value="KIMATAIFA">Kimataifa</option>
+        <option value="matukiomapyaText">Matukio Mapya</option>
+      </select>
+
+      <label for="title">Kichwa cha Habari:</label>
+      <input type="text" id="title" required>
+
+      <label for="content">Maelezo / Habari:</label>
+      <textarea id="content" required></textarea>
+
+      <label for="images">Chagua Picha (unaweza chagua zaidi ya moja):</label>
+      <input type="file" id="images" accept="image/*" multiple>
+
+      <div class="preview" id="imagePreview"></div>
+
+      <button type="submit">Tuma Maudhui</button>
+      <p id="status" class="success"></p>
+    </form>
+  </div>
+
+  <script>
+    const correctPassword = "Bizzy@123";
+
+    function checkPassword() {
+      const input = document.getElementById("password").value;
+      const loginStatus = document.getElementById("loginStatus");
+
+      if (input === correctPassword) {
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("adminPanel").style.display = "block";
+      } else {
+        loginStatus.textContent = "❌ Nenosiri si sahihi!";
+      }
+    }
+
+    const form = document.getElementById('postForm');
+    const status = document.getElementById('status');
+    const imagesInput = document.getElementById('images');
+    const imagePreview = document.getElementById('imagePreview');
+    let imageBase64List = [];
+
+    imagesInput?.addEventListener("change", () => {
+      imageBase64List = [];
+      imagePreview.innerHTML = "";
+      const files = imagesInput.files;
+
+      for (let file of files) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          imageBase64List.push(e.target.result);
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          imagePreview.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    form?.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const section = document.getElementById('section').value;
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+
+      const data = JSON.parse(localStorage.getItem(section) || '[]');
+
+      data.unshift({
+        title,
+        content,
+        images: imageBase64List,
+        date: new Date().toISOString()
+      });
+
+      localStorage.setItem(section, JSON.stringify(data));
+
+      form.reset();
+      imagePreview.innerHTML = "";
+      imageBase64List = [];
+      status.textContent = "✅ Maudhui yamehifadhiwa pamoja na picha!";
+      setTimeout(() => status.textContent = "", 3000);
+    });
+  </script>
+</body>
+</html>
